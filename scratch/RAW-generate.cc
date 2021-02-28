@@ -61,7 +61,7 @@ void RAWGroupping (uint16_t Numsta, uint16_t NGroups, uint16_t NumSlot, uint16_t
     uint16_t NRawSta;
     uint16_t NRawGroups;
     uint16_t NstaPerRaw;
-    uint16_t NstaPerSlot;
+    //uint16_t NstaPerSlot;
 
 
     uint16_t RawControl = 0;
@@ -95,7 +95,7 @@ void RAWGroupping (uint16_t Numsta, uint16_t NGroups, uint16_t NumSlot, uint16_t
      	aid_start = 1;
 
      	NstaPerRaw = NRawSta/NRawGroups;
-     	NstaPerSlot = NstaPerRaw/SlotNum;
+     	//NstaPerSlot = NstaPerRaw/SlotNum;
 
      	if (SlotNum < 8)
      	{
@@ -109,7 +109,7 @@ void RAWGroupping (uint16_t Numsta, uint16_t NGroups, uint16_t NumSlot, uint16_t
      	for (uint16_t groupID = 1; groupID <= NRawGroups; groupID++)
      	{
      		aid_end = aid_start + NstaPerRaw - 1;
-     		NS_ASSERT (pageIndex * 2048 < aid_end && aid_end < (pageIndex + 1) * 2048);
+     		NS_ASSERT (pageIndex * 2048u < aid_end && aid_end < (pageIndex + 1u) * 2048u);
      		//newfile.open (filepath, ios::out | ios::app);
      		newfile << RawControl << "\t" << SlotCrossBoundary << "\t" << SlotFormat << "\t" << SlotDurationCount << "\t" << SlotNum << "\t" << pageIndex << "\t" << aid_start << "\t" << aid_end << "\t" << "\n";
      		//newfile.close();
@@ -122,7 +122,7 @@ void RAWGroupping (uint16_t Numsta, uint16_t NGroups, uint16_t NumSlot, uint16_t
     	//newfile.open (filepath, ios::out | ios::trunc);
     	newfile << pageSliceCount << "\n";
     	//newfile.close();
-    	for (int timID = 0; timID < pageSliceCount; timID++)
+    	for (unsigned timID = 0; timID < pageSliceCount; timID++)
     	{
         	std::cout << "tim num=" << timID << std::endl;
     		newfile << NGroups << "\n";

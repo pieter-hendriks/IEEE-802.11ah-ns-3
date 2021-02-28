@@ -312,11 +312,11 @@ RPS::GetRawAssigmentObj(uint32_t raw_index) const {
 	{
 		NS_ASSERT ("RAW configuration incorrect!");
 	}
-	uint8_t RAW_number = raw_len/rawAssignment_len;
+	//uint8_t RAW_number = raw_len/rawAssignment_len;
 
-	uint16_t slotDurationCount=0;
-	uint16_t slotNum=0;
-	uint64_t currentRAW_start=0;
+	//uint16_t slotDurationCount=0;
+	//uint16_t slotNum=0;
+	//uint64_t currentRAW_start=0;
 
 	uint8_t rawtypeindex = rawassign[raw_index*rawAssignment_len+0] & 0x07;
 	ass.SetRawTypeIndex(rawtypeindex); //TODO check 0

@@ -27,8 +27,8 @@ void *get_in_addr(struct sockaddr *sa) {
 
 
 int stat_connect(const char* hostname, const char* port) {
-	int sockfd, numbytes;
-	char buf[MAXDATASIZE];
+	int sockfd;//, numbytes;
+	//char buf[MAXDATASIZE];
 	struct addrinfo hints, *servinfo, *p;
 	int rv;
 	char s[INET6_ADDRSTRLEN];
@@ -86,9 +86,9 @@ bool stat_send(int sockfd, const char* buf) {
 			int bytesSent = send(sockfd, buf,size, 0);
 			if(bytesSent == -1)
 				return false;
-
 			pos+=bytesSent;
 		}
+		return true;
 	}
 }
 

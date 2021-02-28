@@ -207,7 +207,7 @@ IeBeaconTiming::operator== (WifiInformationElement const & a) const
         }
       return true;
     }
-  catch (std::bad_cast)
+  catch (const std::bad_cast&)
     {
       return false;
     }

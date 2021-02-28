@@ -147,7 +147,7 @@ StaWifiMac::StaWifiMac ()
   m_dataBuffered = false;
   m_aid = 8192;
   uint32_t cwmin = 15;
-  uint32_t cwmax = 1023;
+  //uint32_t cwmax = 1023;
   m_pspollDca = CreateObject<DcaTxop> ();
   m_pspollDca->SetAifsn (2);
   m_pspollDca->SetMinCw ((cwmin + 1) / 4 - 1);
@@ -227,7 +227,7 @@ StaWifiMac::GetChannelWidth (void) const
 uint32_t
 StaWifiMac::GetAID (void) const
 {
-  NS_ASSERT ((1 <= m_aid) && (m_aid<= 8191) || (m_aid == 8192));
+  NS_ASSERT (((1 <= m_aid) && (m_aid<= 8191)) || (m_aid == 8192));
   return m_aid;
 }
 
@@ -1491,8 +1491,8 @@ StaWifiMac::Receive (Ptr<Packet> packet, const WifiMacHeader *hdr)
 
         
         UnsetInRAWgroup ();
-        uint8_t * rawassign;
-        rawassign = beacon.GetRPS().GetRawAssignment();
+        //uint8_t * rawassign;
+        //rawassign = beacon.GetRPS().GetRawAssignment();
         uint16_t raw_len = beacon.GetRPS().GetInformationFieldSize();
         uint16_t rawAssignment_len = 6;
         if (raw_len % rawAssignment_len !=0)
@@ -1527,13 +1527,13 @@ StaWifiMac::Receive (Ptr<Packet> packet, const WifiMacHeader *hdr)
 
          if (ass.GetRawGroupPage() == ((GetAID() >> 11 ) & 0x0003)) //in the page indexed
            {
-               uint16_t statsPerSlot = 0;
+               //uint16_t statsPerSlot = 0;
                uint16_t statRawSlot = 0;
 
                Ptr<UniformRandomVariable> m_rv = CreateObject<UniformRandomVariable> ();
                uint16_t offset = m_rv->GetValue (0, 1023);
                offset =0; // for test
-               statsPerSlot = (ass.GetRawGroupAIDEnd() - ass.GetRawGroupAIDStart() + 1)/m_slotNum;
+               //statsPerSlot = (ass.GetRawGroupAIDEnd() - ass.GetRawGroupAIDStart() + 1)/m_slotNum;
                //statRawSlot = ((GetAID() & 0x03ff)-raw_start)/statsPerSlot;
                statRawSlot = ((GetAID() & 0x07ff)+offset)%m_slotNum;
 

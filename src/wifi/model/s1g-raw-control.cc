@@ -236,7 +236,7 @@ S1gRawCtr::UdpateSensorStaInfo (std::vector<uint16_t> m_sensorlist, std::vector<
   std::ofstream outputfile;
   std::ostringstream APId;
 
-  uint16_t numsensor = m_sensorlist.size (); //need to be improved
+  //uint16_t numsensor = m_sensorlist.size (); //need to be improved
   /*if (m_stations.size() < numsensor)
      {
       for (uint16_t i = m_stations.size(); i < numsensor; i++)
@@ -411,7 +411,9 @@ S1gRawCtr::UdpateSensorStaInfo (std::vector<uint16_t> m_sensorlist, std::vector<
     EstimateInterval :
            //stationTransmit->EstimateTransmissionInterval (currentId);
            //NS_LOG_UNCOND ("... "); //to do, remove it
-         uint16_t add=0;
+         	//uint16_t add=0;
+					 ; // Do nothing, but have a line here so compiler stops complaining. 
+
      }
 
     for (std::vector<uint16_t>::iterator it = m_aidList.begin(); it != m_aidList.end(); it++)
@@ -543,11 +545,11 @@ Sensor::EstimateTransmissionInterval (uint64_t currentId, uint64_t m_beaconInter
 
          if (GetNumPacketsReceived () > 1 && m_transmissionInterval > 1)
            {
-             //m_transmissionIntervalMin = last_transmissionInterval - 1;
-             //m_transmissionIntervalMax = last_transmissionInterval - 1;
-             m_transmissionInterval = m_transmissionInterval - 1;
-             m_transInOneBeacon = 1;
-               uint16_t intervalsum = m_transmissionInterval;
+							//m_transmissionIntervalMin = last_transmissionInterval - 1;
+							//m_transmissionIntervalMax = last_transmissionInterval - 1;
+							m_transmissionInterval = m_transmissionInterval - 1;
+							m_transInOneBeacon = 1;
+            	//uint16_t intervalsum = m_transmissionInterval;
                /*
                for (std::vector<uint16_t>::iterator ci = m_transIntervalList.begin(); ci != m_transIntervalList.end(); ci++)
                {
@@ -599,7 +601,7 @@ Sensor::EstimateTransmissionInterval (uint64_t currentId, uint64_t m_beaconInter
          //m_transmissionIntervalMax = currentId - m_snesorUpdatInfo.preSuccessId;
          m_transmissionInterval = currentId - m_snesorUpdatInfo.preSuccessId;
          m_index = 0;
-         uint16_t intervalsum = m_transmissionInterval;
+         //uint16_t intervalsum = m_transmissionInterval;
          /*
          for (std::vector<uint16_t>::iterator ci = m_transIntervalList.begin(); ci != m_transIntervalList.end(); ci++)
          {
@@ -817,8 +819,8 @@ S1gRawCtr::LookupLastTransmission (uint16_t aid)
             return it;
         }
     }
-
-  NS_ASSERT ("ERROR OCUURS");
+	//Changed assert to actually error. Sizeof(cstring) is true, so assert doesn't terminate the program and there's no return.
+  NS_ASSERT_MSG (false, "ERROR OCUURS");
 }
 
 

@@ -210,7 +210,7 @@ void TcpServer::Write(Address to, char* data, int size) {
 	// send blocks if queue exceeds packet size
 	while (handles[to].txBuffer.size() > m_size) {
 		uint8_t* block = new uint8_t[m_size];
-		for (int i = 0; i < m_size; i++) {
+		for (unsigned i = 0; i < m_size; i++) {
 			block[i] = (uint8_t) handles[to].txBuffer.front();
 			handles[to].txBuffer.pop();
 		}
@@ -224,8 +224,9 @@ int TcpServer::Read(Address from, char* data, int size) {
 	if (handles[from].rxBuffer.size() == 0)
 		return 0;
 
+	NS_ASSERT_MSG(size > 0, "Ensure size falls with unsigned range to make cast below valid. Should be true because negative size doesn't tend to happen.");
 	int nrOfBytesRead = (
-			handles[from].rxBuffer.size() > size ?
+			handles[from].rxBuffer.size() > static_cast<unsigned>(size) ?
 					size : handles[from].rxBuffer.size());
 
 	for (int i = 0; i < nrOfBytesRead; i++) {

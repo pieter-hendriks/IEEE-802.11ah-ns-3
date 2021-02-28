@@ -1419,7 +1419,7 @@ YansWifiPhy::GetS1gLongfield (void) const
 void
 YansWifiPhy::SetChannelWidth(uint32_t channelwidth)
 {
-    NS_ASSERT_MSG (channelwidth == 1 || channelwidth == 2 || channelwidth == 4| channelwidth == 8| channelwidth ==16|| channelwidth == 20 || channelwidth == 40 || channelwidth == 80 || channelwidth == 160, "wrong channel width value");
+    NS_ASSERT_MSG (channelwidth == 1 || channelwidth == 2 || channelwidth == 4 || channelwidth == 8 || channelwidth ==16|| channelwidth == 20 || channelwidth == 40 || channelwidth == 80 || channelwidth == 160, "wrong channel width value");
     m_channelWidth = channelwidth;
 }
 

@@ -116,7 +116,7 @@ void TCPIPCameraClient::Stream() {
 void TCPIPCameraClient::OnDataReceived() {
 
 	char* buf = new char[1024];
-	while(int nrOfBytesRead = Read(buf, 1024)) {
+	while(/*int nrOfBytesRead = */Read(buf, 1024)) {
 	}
 	delete buf;
 

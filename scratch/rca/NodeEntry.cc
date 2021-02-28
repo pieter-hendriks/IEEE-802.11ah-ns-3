@@ -262,6 +262,8 @@ void NodeEntry::OnPhyStateChange(std::string context, const Time start,	const Ti
 		case WifiPhy::State::SLEEP: //Sleep
 			stats->get(this->id).TotalSleepTime += duration;
 			break;
+		default: // Add default to avoid warning/error
+			break;
 		}
 	}
 	stats->get(this->id).EnergyRxIdle = (stats->get(this->id).TotalRxTime.GetSeconds() + stats->get(this->id).TotalIdleTime.GetSeconds()) * 4.4;
@@ -399,7 +401,7 @@ void NodeEntry::OnTcpEchoPacketReceived(Ptr<const Packet> packet, Address from) 
 		stats->get(this->id).NumberOfSuccessfulRoundtripPackets++;
 		stats->get(this->id).TotalPacketRoundtripTime += timeDiff;
 
-	} catch (std::runtime_error e) {
+	} catch (const std::runtime_error& e) {
 
 		// this occurs when packet is fragmented
 		cerr << "Error: " << string(e.what()) << endl;
@@ -504,7 +506,7 @@ void NodeEntry::OnUdpEchoPacketReceived(Ptr<const Packet> packet, Address from) 
 		// RT jitter calculation [server to client direction]
 		this->UpdateJitter(Simulator::Now() - this->timeSent);
 
-	} catch (std::runtime_error e) {
+	} catch (const std::runtime_error& e) {
 		// packet fragmentation, unable to get the header from fragements
 	}
 }
@@ -574,7 +576,7 @@ void NodeEntry::OnCoapPacketReceived(Ptr<const Packet> packet, Address from) {
 		stats->get(this->id).m_prevPacketSeqClient = currentSequenceNumber;
 		stats->get(this->id).m_prevPacketTimeClient = newNow;
 
-	} catch (std::runtime_error e) {
+	} catch (const std::runtime_error& e) {
 		// packet fragmentation, unable to get the header from fragements
 	}
 
@@ -598,7 +600,7 @@ void NodeEntry::OnUdpPacketReceivedAtAP(Ptr<const Packet> packet) {
 		//cout << "id = " << this->id << " ; latency = " << timeDiff << " ; seq =  " << seqTs.GetSeq() << endl;
 		stats->get(this->id).TotalPacketPayloadSize += packet->GetSize();
 
-	} catch (std::runtime_error e) {
+	} catch (const std::runtime_error& e) {
 		// packet fragmentation, unable to get header
 	}
 }
@@ -655,7 +657,7 @@ void NodeEntry::OnCoapPacketReceivedAtServer(Ptr<const Packet> packet) {
 		}
 		stats->get(this->id).TotalPacketPayloadSize += packet->GetSize() - 4 - 7; //deduct coap hdr & opts, only payload here
 		//std::cout << packet->GetSize() << std::endl;
-	} catch (std::runtime_error e) {
+	} catch (const std::runtime_error& e) {
 		// packet fragmentation, unable to get header
 	}
 }

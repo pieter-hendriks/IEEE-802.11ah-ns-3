@@ -315,8 +315,8 @@ void onSTAAssociated(int i) {
 	cout << "Node " << std::to_string(i) << " is associated and has aid "
 			<< nodes[i]->aId << endl;
 
-	for (int k = 0; k < config.rps.rpsset.size(); k++) {
-		for (int j = 0; j < config.rps.rpsset[k]->GetNumberOfRawGroups(); j++) {
+	for (unsigned k = 0; k < config.rps.rpsset.size(); k++) {
+		for (unsigned j = 0; j < config.rps.rpsset[k]->GetNumberOfRawGroups(); j++) {
 			if (config.rps.rpsset[k]->GetRawAssigmentObj(j).GetRawGroupAIDStart()
 					<= i + 1
 					&& i + 1
@@ -663,7 +663,7 @@ void onChannelTransmission(Ptr<NetDevice> senderDevice, Ptr<Packet> packet) {
 
 int getSTAIdFromAddress(Ipv4Address from) {
 	int staId = -1;
-	for (int i = 0; i < staNodeInterface.GetN(); i++) {
+	for (unsigned i = 0; i < staNodeInterface.GetN(); i++) {
 		if (staNodeInterface.GetAddress(i) == from) {
 			staId = i;
 			break;
@@ -1125,6 +1125,8 @@ void PhyStateTrace(std::string context, Time start, Time duration,
 			timeCollisionArray[node] = timeCollisionArray[node] + duration;
 			//NS_LOG_UNCOND (to_string(node+1) + ",CCA_BUSY," + to_string(start.GetMicroSeconds()) + " " + to_string(duration.GetMicroSeconds()));
 			break;
+		default: // Default case to suppress compiler warning/error
+			break;
 		}
 	}
 	else
@@ -1150,6 +1152,8 @@ void PhyStateTrace(std::string context, Time start, Time duration,
 		case WifiPhy::State::CCA_BUSY: //CCA_BUSY
 			timeCollisionNotAssociated[node] = timeCollisionNotAssociated[node] + duration;
 			//NS_LOG_UNCOND (to_string(node+1) + ",CCA_BUSY," + to_string(start.GetMicroSeconds()) + " " + to_string(duration.GetMicroSeconds()));
+			break;
+		default: // Default to suppress compiler warning/error
 			break;
 		}
 	}
@@ -1186,7 +1190,7 @@ int main(int argc, char *argv[]) {
 	eventManager = SimulationEventManager(config.visualizerIP,
 			config.visualizerPort, config.NSSFile);
 	uint32_t totalRawGroups(0);
-	for (int i = 0; i < config.rps.rpsset.size(); i++) {
+	for (unsigned i = 0; i < config.rps.rpsset.size(); i++) {
 		int nRaw = config.rps.rpsset[i]->GetNumberOfRawGroups();
 		totalRawGroups += nRaw;
 		//cout << "Total raw groups after rps " << i << " is " << totalRawGroups << endl;
@@ -1459,7 +1463,7 @@ int main(int argc, char *argv[]) {
 
 	// Visualizer throughput
 	int pay = 0, totalSuccessfulPackets = 0, totalSentPackets = 0, totalPacketsEchoed = 0;
-	for (int i = 0; i < config.Nsta; i++)
+	for (unsigned i = 0; i < config.Nsta; i++)
 	{
 		totalSuccessfulPackets += stats.get(i).NumberOfSuccessfulPackets;
 		totalSentPackets += stats.get(i).NumberOfSentPackets;
@@ -1490,9 +1494,7 @@ int main(int argc, char *argv[]) {
 	}
 	else if (config.trafficType == "udpecho")
 	{
-		double ulThroughput = 0, dlThroughput = 0;
-		ulThroughput = totalSuccessfulPackets * config.payloadSize * 8 / (config.simulationTime * 1000000.0);
-		dlThroughput = totalPacketsEchoed * config.payloadSize * 8 / (config.simulationTime * 1000000.0);
+		
 		cout << "totalPacketsSent " << totalSentPackets << endl;
 		cout << "totalPacketsDelivered " << totalSuccessfulPackets << endl;
 		cout << "totalPacketsEchoed " << totalPacketsEchoed << endl;
@@ -1500,7 +1502,10 @@ int main(int argc, char *argv[]) {
 		cout << "DL packets lost " << totalSuccessfulPackets - totalPacketsEchoed << endl;
 		cout << "Total packets lost " << totalSentPackets - totalPacketsEchoed << endl;
 
-		/*cout << "uplink throughput Mbit/s " << ulThroughput << endl;
+		/*double ulThroughput = 0, dlThroughput = 0;
+		ulThroughput = totalSuccessfulPackets * config.payloadSize * 8 / (config.simulationTime * 1000000.0);
+		dlThroughput = totalPacketsEchoed * config.payloadSize * 8 / (config.simulationTime * 1000000.0);
+		cout << "uplink throughput Mbit/s " << ulThroughput << endl;
 		cout << "downlink throughput Mbit/s " << dlThroughput << endl;*/
 
 		double throughput = (totalSuccessfulPackets + totalPacketsEchoed) * config.payloadSize * 8 / (config.simulationTime * 1000000.0);
@@ -1518,7 +1523,7 @@ int main(int argc, char *argv[]) {
     risultati.open(addressresults.c_str(), ios::out | ios::trunc);
 
     risultati << "Sta node#,distance,timerx(notassociated),timeidle(notassociated),timetx(notassociated),timesleep(notassociated),timecollision(notassociated)" << std::endl;
-    int i = 0;
+    unsigned i = 0;
     string spazio = ",";
     
     while (i < config.Nsta) {

@@ -497,14 +497,14 @@ ApWifiMac::ForwardDown (Ptr<const Packet> packet, Mac48Address from,
 	  NS_LOG_INFO (Simulator::Now().GetMicroSeconds() << " ms: AP to forward data for [aid=" << aid << "]");
 
 	  uint8_t block = (aid >> 6 ) & 0x001f;
-	  uint8_t page = (aid >> 11 ) & 0x0003;
+	  //uint8_t page = (aid >> 11 ) & 0x0003;
 	  NS_ASSERT (block >= m_pageslice.GetBlockOffset());
 	  uint8_t toTim = 0;
 	  	//= (block - m_pageslice.GetBlockOffset()) % m_pageslice.GetPageSliceLen(); //TODO make config alignment between TIM and RAW e.g. if AID belongs to TIM0 it cannot belong to RAW located in TIM3
 
 	  	for (uint32_t i = 0; i < m_pageslice.GetPageSliceCount(); i++)
 	  	{
-	  		if (i == m_pageslice.GetPageSliceCount() - 1)
+	  		if (i == m_pageslice.GetPageSliceCount() - 1u)
 	  		{
 	  			//last page slice
 	  			if ( i * m_pageslice.GetPageSliceLen() <= block && block <= 31)
@@ -565,7 +565,7 @@ ApWifiMac::GetSlotStartTimeFromAid (uint16_t aid) const
 
 	for (uint32_t i = 0; i < m_pageslice.GetPageSliceCount(); i++)
 	{
-		if (i == m_pageslice.GetPageSliceCount() - 1)
+		if (i == m_pageslice.GetPageSliceCount() - 1u)
 		{
 			//last page slice
 			if ( i * m_pageslice.GetPageSliceLen() <= block && block <= 31)
@@ -573,7 +573,7 @@ ApWifiMac::GetSlotStartTimeFromAid (uint16_t aid) const
 		}
 		else
 		{
-			if (i * m_pageslice.GetPageSliceLen() <= block && block < (i + 1) * m_pageslice.GetPageSliceLen())
+			if (i * m_pageslice.GetPageSliceLen() <= block && block < (i + 1u) * m_pageslice.GetPageSliceLen())
 			{
 				if (i == 0)
 					continue;
@@ -1214,7 +1214,7 @@ ApWifiMac::SendOneBeacon (void)
       uint16_t endaid;
       Mac48Address stasAddr;
       //uint16_t offset;
-      uint16_t statsPerSlot;
+      //uint16_t statsPerSlot;
       uint16_t statRawSlot;
 
       //NS_LOG_UNCOND ("ap send beacon at " << Simulator::Now ());
@@ -1255,7 +1255,7 @@ ApWifiMac::SendOneBeacon (void)
 
     	  //offset =0; // for test
     	  //m_slotNum=m_rps->GetRawAssigmentObj(g).GetSlotNum();
-    	  statsPerSlot = (endaid - startaid + 1)/m_rps->GetRawAssigmentObj(g).GetSlotNum();
+    	  //statsPerSlot = (endaid - startaid + 1)/m_rps->GetRawAssigmentObj(g).GetSlotNum();
 
     	  for (uint32_t i = 0; i < m_rps->GetRawAssigmentObj(g).GetSlotNum(); i++)
     	  {

@@ -259,7 +259,9 @@ AthstatsWifiTraceSink::Open (std::string const &name)
 void
 AthstatsWifiTraceSink::WriteStats ()
 {
-  NS_ABORT_MSG_UNLESS (this, "function called with null this pointer, now=" << Now () );
+	// Compiler error here, calling with null this should be impossible? 
+  //NS_ABORT_MSG_UNLESS (this, "function called with null this pointer, now=" << Now () );
+
   //The comments below refer to how each value maps to madwifi's athstats
   //I know C strings are ugly but that's the quickest way to use exactly the same format as in madwifi
   char str[200];

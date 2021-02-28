@@ -287,7 +287,6 @@ TcpSocketBase::TcpSocketBase (void)
     m_rtt (0),
     m_nextTxSequence (0), // Change this for non-zero initial sequence number
     m_highTxMark (0),
-    m_state (CLOSED),
     m_errno (ERROR_NOTERROR),
     m_closeNotified (false),
     m_closeOnEmpty (false),
@@ -313,7 +312,8 @@ TcpSocketBase::TcpSocketBase (void)
     m_limitedTx (false),
     m_retransOut (0),
     m_congestionControl (0),
-    m_isFirstPartialAck (true)
+    m_isFirstPartialAck (true),
+    m_state (CLOSED)
 {
   NS_LOG_FUNCTION (this);
   m_rxBuffer = CreateObject<TcpRxBuffer> ();
@@ -359,7 +359,6 @@ TcpSocketBase::TcpSocketBase (const TcpSocketBase& sock)
     m_tcp (sock.m_tcp),
     m_nextTxSequence (sock.m_nextTxSequence),
     m_highTxMark (sock.m_highTxMark),
-    m_state (sock.m_state),
     m_errno (sock.m_errno),
     m_closeNotified (sock.m_closeNotified),
     m_closeOnEmpty (sock.m_closeOnEmpty),
@@ -384,7 +383,8 @@ TcpSocketBase::TcpSocketBase (const TcpSocketBase& sock)
     m_retransOut (sock.m_retransOut),
     m_isFirstPartialAck (sock.m_isFirstPartialAck),
     m_txTrace (sock.m_txTrace),
-    m_rxTrace (sock.m_rxTrace)
+    m_rxTrace (sock.m_rxTrace),
+    m_state (sock.m_state)
 {
   NS_LOG_FUNCTION (this);
   NS_LOG_LOGIC ("Invoked the copy constructor");

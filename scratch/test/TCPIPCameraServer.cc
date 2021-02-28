@@ -36,7 +36,7 @@ void TCPIPCameraServer::OnDataReceived(ns3::Address from) {
 	char* buf = new char[1024];
 	int nrOfBytesRead;
 
-	while(nrOfBytesRead = Read(from, buf, 1024)) {
+ 	while( (nrOfBytesRead = Read(from, buf, 1024)) ) {
 		// discard
 		dataReceived(from, nrOfBytesRead);
 	}
