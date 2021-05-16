@@ -22,318 +22,340 @@
 #ifndef STA_WIFI_MAC_H
 #define STA_WIFI_MAC_H
 
-#include "regular-wifi-mac.h"
+#include "amsdu-subframe-header.h"
+#include "extension-headers.h"
 #include "ns3/event-id.h"
 #include "ns3/packet.h"
 #include "ns3/traced-callback.h"
-#include "supported-rates.h"
-#include "amsdu-subframe-header.h"
-#include "s1g-capabilities.h"
 #include "ns3/traced-value.h"
-#include "extension-headers.h"
+#include "regular-wifi-mac.h"
+#include "s1g-capabilities.h"
+#include "supported-rates.h"
 
-namespace ns3  {
-
-class MgtAddBaRequestHeader;
-
-/**
- * \ingroup wifi
- *
- * The Wifi MAC high model for a non-AP STA in a BSS.
- */
-class StaWifiMac : public RegularWifiMac
+namespace ns3
 {
-public:
-  static TypeId GetTypeId (void);
 
-  typedef void (* S1gBeaconMissedCallback)
-		  (bool nextBeaconIsDTIM);
+	class MgtAddBaRequestHeader;
 
-  StaWifiMac ();
-  virtual ~StaWifiMac ();
+	/**
+	 * \ingroup wifi
+	 *
+	 * The Wifi MAC high model for a non-AP STA in a BSS.
+	 */
+	class StaWifiMac : public RegularWifiMac
+	{
+	public:
+		static TypeId GetTypeId(void);
 
-  /**
-   * \param stationManager the station manager attached to this MAC.
-   */
-  virtual void SetWifiRemoteStationManager (Ptr<WifiRemoteStationManager> stationManager);
+		typedef void (*S1gBeaconMissedCallback)(bool nextBeaconIsDTIM);
 
-  /**
-   * \param packet the packet to send.
-   * \param to the address to which the packet should be sent.
-   *
-   * The packet should be enqueued in a tx queue, and should be
-   * dequeued as soon as the channel access function determines that
-   * access is granted to this MAC.
-   */
-  virtual void Enqueue (Ptr<const Packet> packet, Mac48Address to);
+		StaWifiMac();
+		virtual ~StaWifiMac();
 
-  /**
-   * \param missed the number of beacons which must be missed
-   * before a new association sequence is started.
-   */
-  void SetMaxMissedBeacons (uint32_t missed);
-  /**
-   * \param timeout
-   *
-   * If no probe response is received within the specified
-   * timeout, the station sends a new probe request.
-   */
-  void SetProbeRequestTimeout (Time timeout);
-  /**
-   * \param timeout
-   *
-   * If no association response is received within the specified
-   * timeout, the station sends a new association request.
-   */
-  void SetAssocRequestTimeout (Time timeout);
+		/**
+		 * \param stationManager the station manager attached to this MAC.
+		 */
+		virtual void SetWifiRemoteStationManager(Ptr<WifiRemoteStationManager> stationManager);
 
-  /**
-   * Start an active association sequence immediately.
-   */
-  void StartActiveAssociation (void);
-  void TxOk (const WifiMacHeader &hdr);
+		/**
+		 * \param packet the packet to send.
+		 * \param to the address to which the packet should be sent.
+		 *
+		 * The packet should be enqueued in a tx queue, and should be
+		 * dequeued as soon as the channel access function determines that
+		 * access is granted to this MAC.
+		 */
+		virtual void Enqueue(Ptr<const Packet> packet, Mac48Address to);
 
-    uint32_t GetStaType (void) const;
-    uint32_t GetChannelWidth (void) const;
-    void SetStaType (uint32_t statype);
-    void SetChannelWidth (uint32_t width);
-    void SendDisAssociationRequest (void);
-    void SendAssociationRequest (void);
+		/**
+		 * \param missed the number of beacons which must be missed
+		 * before a new association sequence is started.
+		 */
+		void SetMaxMissedBeacons(uint32_t missed);
+		/**
+		 * \param timeout
+		 *
+		 * If no probe response is received within the specified
+		 * timeout, the station sends a new probe request.
+		 */
+		void SetProbeRequestTimeout(Time timeout);
+		/**
+		 * \param timeout
+		 *
+		 * If no association response is received within the specified
+		 * timeout, the station sends a new association request.
+		 */
+		void SetAssocRequestTimeout(Time timeout);
 
-  /**
-   * Get Station AID.
-   */
-  uint32_t GetAID (void) const;
+		/**
+		 * Start an active association sequence immediately.
+		 */
+		void StartActiveAssociation(void);
+		void TxOk(const WifiMacHeader &hdr);
 
-    /*void SetPageSlicingSupported (uint8_t support);
-    uint8_t GetPageSlicingSupported (void) const;*/
-private:
-    uint32_t m_staType;
-    uint32_t m_channelWidth;
-    Time m_currentslotDuration;
-  /**
-   * The current MAC state of the STA.
-   */
-  enum MacState
-  {
-    ASSOCIATED,
-    WAIT_PROBE_RESP,
-    WAIT_ASSOC_RESP,
-    WAIT_DISASSOC_ACK,
-    BEACON_MISSED,
-    REFUSED
-  };
+		uint32_t GetStaType(void) const;
+		uint32_t GetChannelWidth(void) const;
+		void SetStaType(uint32_t statype);
+		void SetChannelWidth(uint32_t width);
+		void SendDisAssociationRequest(void);
+		void SendAssociationRequest(void);
 
-  void OnAssociated();
-  void OnDeassociated();
-/*
-  void GrantDCAAccess();
-  void DenyDCAAccess();
-  */
-  /**
-   * Enable or disable active probing.
-   *
-   * \param enable enable or disable active probing
-   */
-  void SetActiveProbing (bool enable);
-  /**
-   * Return whether active probing is enabled.
-   *
-   * \return true if active probing is enabled, false otherwise
-   */
-  bool GetActiveProbing (void) const;
+		/**
+		 * Get Station AID.
+		 */
+		uint32_t GetAID(void) const;
 
-  virtual void Receive (Ptr<Packet> packet, const WifiMacHeader *hdr);
+		/*void SetPageSlicingSupported (uint8_t support);
+		uint8_t GetPageSlicingSupported (void) const;*/
+	protected:
+	private:
+		uint32_t m_staType;
+		uint32_t m_channelWidth;
+		Time m_currentslotDuration;
+		/**
+		 * The current MAC state of the STA.
+		 */
+		enum MacState
+		{
+			ASSOCIATED,
+			WAIT_PROBE_RESP,
+			WAIT_ASSOC_RESP,
+			WAIT_DISASSOC_ACK,
+			BEACON_MISSED,
+			REFUSED
+		};
 
-  /**
-   * Forward a probe request packet to the DCF. The standard is not clear on the correct
-   * queue for management frames if QoS is supported. We always use the DCF.
-   */
-  void SendProbeRequest (void);
-  /**
-   * Forward an association request packet to the DCF. The standard is not clear on the correct
-   * queue for management frames if QoS is supported. We always use the DCF.
-   */
-  //void SendAssociationRequest (void);
-  /**
-   * Try to ensure that we are associated with an AP by taking an appropriate action
-   * depending on the current association status.
-   */
-  void TryToEnsureAssociated (void);
-  /**
-   * This method is called after the association timeout occurred. We switch the state to
-   * WAIT_ASSOC_RESP and re-send an association request.
-   */
-  void AssocRequestTimeout (void);
-  /**
-   * This method is called after the probe request timeout occurred. We switch the state to
-   * WAIT_PROBE_RESP and re-send a probe request.
-   */
-  void ProbeRequestTimeout (void);
-  /**
-   * Return whether we are associated with an AP.
-   *
-   * \return true if we are associated with an AP, false otherwise
-   */
-  bool IsAssociated (void) const;
-  /**
-   * Return whether we are waiting for an association response from an AP.
-   *
-   * \return true if we are waiting for an association response from an AP, false otherwise
-   */
-  bool IsWaitDisAssocTxOk (void) const;
-  bool IsWaitAssocResp (void) const;
-  /**
-   * This method is called after we have not received a beacon from the AP
-   */
-  void MissedBeacons (void);
-  /**
-   * Restarts the beacon timer.
-   *
-   * \param delay the delay before the watchdog fires
-   */
-  void RestartBeaconWatchdog (Time delay);
-  /**
-   * Return an instance of SupportedRates that contains all rates that we support
-   * including HT rates.
-   *
-   * \return SupportedRates all rates that we support
-   */
-  SupportedRates GetSupportedRates (void) const;
-  /**
-   * Set the current MAC state.
-   *
-   * \param value the new state
-   */
-  void SetState (enum MacState value);
-  /**
-   * Return the HT capability of the current AP.
-   *
-   * \return the HT capability that we support
-   */
-  HtCapabilities GetHtCapabilities (void) const;
-  S1gCapabilities GetS1gCapabilities (void) const;
-  /**
-   * Set the AID.
-   *
-   * \param aid the AID received from assoc response frame
-   */
-  void SetAID (uint32_t aid);
+		// Receive helper functions - make the code a little more readable
+		void HandlePacketDrop(Ptr<Packet> packet);
+		void HandleDataPacket(Ptr<Packet> packet, const WifiMacHeader *hdr);
+		void HandleBeacon(Ptr<Packet> packet, const WifiMacHeader *hdr);
+		void HandleS1gBeacon(Ptr<Packet> packet, const WifiMacHeader *hdr);
+		void HandleGoodS1gBeacon(Ptr<Packet> packet, const WifiMacHeader *hdr, S1gBeaconHeader &beacon);
+		void HandleProbeResponse(Ptr<Packet> packet, const WifiMacHeader *hdr);
+		void HandleAssociationResponse(Ptr<Packet> packet, const WifiMacHeader *hdr);
+		void HandleTwtChanges();
 
-  void SetRawDuration (Time interval);
-  Time GetRawDuration (void) const;
-  Time GetEarlyWakeTime (void) const;
-  void SendPspoll (void);
-  void SendPspollIfnecessary (void);
-  void S1gBeaconReceived (S1gBeaconHeader beacon);
-  void S1gTIMReceived (S1gBeaconHeader beacon);
+		// Helper function to get correct beacon period for updated twt sessions
+		void HandleUpdatedTwtSessions();
 
-  void StartRawbackoff (void);
-  void OutsideRawStartBackoff (void);
-  bool Is(uint8_t blockbitmap, uint8_t j);
-  void InsideBackoff (void);
-  void RawSlotStartBackoff (void);  
-  void RawSlotStartBackoffPostpone (void);
-  uint32_t GetSelfPageSliceNum (void);
+		void OnAssociated();
+		void OnDeassociated();
+		/*
+				void GrantDCAAccess();
+				void DenyDCAAccess();
+				*/
+		/**
+		 * Enable or disable active probing.
+		 *
+		 * \param enable enable or disable active probing
+		 */
+		void SetActiveProbing(bool enable);
+		/**
+		 * Return whether active probing is enabled.
+		 *
+		 * \return true if active probing is enabled, false otherwise
+		 */
+		bool GetActiveProbing(void) const;
 
-  void SetDataBuffered (void);
-  void ClearDataBuffered (void);
-  void SetInRAWgroup(void);
-  void UnsetInRAWgroup(void);
-  
-   /**
-   * wake up operation
-   */
-  void WakeUp (void);
-  void SleepIfQueueIsEmpty(bool);
-  bool HasPacketsInQueue();
-  void BeaconWakeUp (void);
-  void GoToSleepBinary (int value);
+		virtual void Receive(Ptr<Packet> packet, const WifiMacHeader *hdr);
 
-  TracedValue<uint16_t> nrOfTransmissionsDuringRAWSlot = 0;
-  bool IsInPagebitmap (uint8_t block);
-  
-  void GoToSleepNextTIM (S1gBeaconHeader beacon);
-  void GoToSleepCurrentTIM (S1gBeaconHeader beacon);
-  void GoToSleep(Time  sleeptime); 
+		/**
+		 * Forward a probe request packet to the DCF. The standard is not clear on the correct
+		 * queue for management frames if QoS is supported. We always use the DCF.
+		 */
+		void SendProbeRequest(void);
+		/**
+		 * Forward an association request packet to the DCF. The standard is not clear on the correct
+		 * queue for management frames if QoS is supported. We always use the DCF.
+		 */
+		// void SendAssociationRequest (void);
+		/**
+		 * Try to ensure that we are associated with an AP by taking an appropriate action
+		 * depending on the current association status.
+		 */
+		void TryToEnsureAssociated(void);
+		/**
+		 * This method is called after the association timeout occurred. We switch the state to
+		 * WAIT_ASSOC_RESP and re-send an association request.
+		 */
+		void AssocRequestTimeout(void);
+		/**
+		 * This method is called after the probe request timeout occurred. We switch the state to
+		 * WAIT_PROBE_RESP and re-send a probe request.
+		 */
+		void ProbeRequestTimeout(void);
+		/**
+		 * Return whether we are associated with an AP.
+		 *
+		 * \return true if we are associated with an AP, false otherwise
+		 */
+		bool IsAssociated(void) const;
+		/**
+		 * Return whether we are waiting for an association response from an AP.
+		 *
+		 * \return true if we are waiting for an association response from an AP, false otherwise
+		 */
+		bool IsWaitDisAssocTxOk(void) const;
+		bool IsWaitAssocResp(void) const;
+		/**
+		 * This method is called after we have not received a beacon from the AP
+		 */
+		void MissedBeacons(void);
+		/**
+		 * Restarts the beacon timer.
+		 *
+		 * \param delay the delay before the watchdog fires
+		 */
+		void RestartBeaconWatchdog(Time delay, bool forceValue = false);
+		/**
+		 * Return an instance of SupportedRates that contains all rates that we support
+		 * including HT rates.
+		 *
+		 * \return SupportedRates all rates that we support
+		 */
+		SupportedRates GetSupportedRates(void) const;
+		/**
+		 * Set the current MAC state.
+		 *
+		 * \param value the new state
+		 */
+		void SetState(enum MacState value);
+		/**
+		 * Return the HT capability of the current AP.
+		 *
+		 * \return the HT capability that we support
+		 */
+		HtCapabilities GetHtCapabilities(void) const;
+		S1gCapabilities GetS1gCapabilities(void) const;
+		/**
+		 * Set the AID.
+		 *
+		 * \param aid the AID received from assoc response frame
+		 */
+		void SetAID(uint32_t aid);
 
-  Time m_lastRawDurationus;
-  Time m_lastRawStart;
-  Time m_rawDuration;
-  Time m_slotDuration;
-  Time m_statSlotStart;
-  bool m_rawStart;
-  bool m_inRawGroup;
-  bool m_pagedStaRaw;
-  bool m_dataBuffered;
-  EventId m_outsideRawEvent;
-  EventId m_insideBackoffEvent;
-  enum MacState m_state;
-  Time m_probeRequestTimeout;
-  Time m_assocRequestTimeout;
-  EventId m_probeRequestEvent;
-  EventId m_assocRequestEvent;
-  EventId m_disassocRequestEvent;
-  EventId m_beaconWatchdog;
-  Time m_beaconWatchdogEnd;
-  uint32_t m_maxMissedBeacons;
-  uint32_t m_aid;
-  bool fasTAssocType;
-  uint16_t fastAssocThreshold;
-    uint16_t assocVaule;
-  uint8_t m_slotCrossBoundary;
-    
-  bool firstBeacon;
-  bool receivingBeacon;  
-  EventId m_beaconWakeUpEvent; 
-  Time beaconInterval;
-  uint64_t timeDifferenceBeacon;  
-  uint64_t timeBeacon;
-  bool outsideraw;
-  bool stationrawslot;
-  bool waitingack;
+		void SetRawDuration(Time interval);
+		Time GetRawDuration(void) const;
+		Time GetEarlyWakeTime(void) const;
+		void SendPspoll(void);
+		void SendPspoll(Mac48Address to);
+		void SendPspollIfnecessary(void);
+		void S1gBeaconReceived(S1gBeaconHeader beacon);
+		void S1gTIMReceived(S1gBeaconHeader beacon);
 
-  bool m_activeProbing;
-  Ptr<DcaTxop> m_pspollDca;  //!< Dedicated DcaTxop for beacons
-  virtual void DoDispose (void);
-  
-  TIM m_TIM;
-  uint8_t m_DTIMCount; //!< DTIM Count
-  uint8_t m_DTIMPeriod; //!< DTIM Period
-  uint8_t m_TrafficIndicator;
-  uint8_t m_PageSliceNum;
-  uint8_t m_PageIndex;
-          
-  pageSlice m_pageSlice;   
-  uint8_t m_PagePeriod;
-  uint8_t m_Pageindex_slice; // page index from page slice element, different from page index in TIM element
-  uint8_t m_Pageindex;
-  uint8_t m_PageSliceLen;
-  uint8_t m_PageSliceCount;
-  uint8_t m_BlockOffset;
-  uint8_t m_TIMOffset;  
-  uint8_t m_PageBitmap[4];
-  uint8_t m_PageBitmapLen;
-  uint8_t m_TIMSeq;  // 0 for DTIM ???
+		// Override the TWT wake-up message
+		// We're a non-AP STA, so we can use PS-poll instead of APSD trigger frame
+		void SendAnnouncedTwtWakeupMessage(Mac48Address to) override;
 
-  bool m_pagedInDtim;
+		void StartRawbackoff(void);
+		void OutsideRawStartBackoff(void);
+		bool Is(uint8_t blockbitmap, uint8_t j);
+		void InsideBackoff(void);
+		void RawSlotStartBackoff(void);
+		void RawSlotStartBackoffPostpone(void);
+		uint32_t GetSelfPageSliceNum(void);
 
+		void SetDataBuffered(void);
+		void ClearDataBuffered(void);
+		void SetInRAWgroup(void);
+		void UnsetInRAWgroup(void);
 
-  uint8_t m_selfBlock;
-  uint8_t m_selfPage;
-  uint8_t m_selfSubBlock;
-  uint8_t m_selfAid;
-  
-  uint8_t m_supportsPageSlicing;
+		/**
+		 * wake up operation
+		 */
+		void WakeUp(void);
+		void SleepIfQueueIsEmpty(bool);
+		bool HasPacketsInQueue();
+		void BeaconWakeUp(void);
+		void GoToSleepBinary(int value);
 
-  Time m_maxTimeInQueue;
-  bool m_crossSlotBoundaryAllowed;
-  TracedCallback<bool> m_beaconMissed;
+		TracedValue<uint16_t> nrOfTransmissionsDuringRAWSlot = 0;
+		bool IsInPagebitmap(uint8_t block);
 
-  TracedCallback<Mac48Address> m_assocLogger;
-  TracedCallback<Mac48Address> m_deAssocLogger;
-};
+		void GoToSleepNextTIM(S1gBeaconHeader beacon);
+		void GoToSleepCurrentTIM(S1gBeaconHeader beacon);
+		void GoToSleep(Time sleeptime);
 
-} //namespace ns3
+		void ConfigureTwt();
+
+		Time m_lastRawDurationus;
+		Time m_lastRawStart;
+		Time m_rawDuration;
+		Time m_slotDuration;
+		Time m_statSlotStart;
+		bool m_rawStart;
+		bool m_inRawGroup;
+		bool m_pagedStaRaw;
+		bool m_dataBuffered;
+		EventId m_outsideRawEvent;
+		EventId m_insideBackoffEvent;
+		enum MacState m_state;
+		Time m_probeRequestTimeout;
+		Time m_assocRequestTimeout;
+		EventId m_probeRequestEvent;
+		EventId m_assocRequestEvent;
+		EventId m_disassocRequestEvent;
+		EventId m_beaconWatchdog;
+		Time m_beaconWatchdogEnd;
+		uint32_t m_maxMissedBeacons;
+		uint32_t m_aid;
+		bool m_fastAssocType;
+		uint16_t m_fastAssocThreshold;
+		uint16_t m_assocValue;
+		uint8_t m_slotCrossBoundary;
+
+		bool m_firstBeacon;
+		bool m_receivingBeacon;
+		EventId m_beaconWakeUpEvent;
+		Time m_beaconInterval;
+		uint64_t m_timeDifferenceBeacon;
+		uint64_t m_timeBeacon;
+		bool m_outsideRaw;
+		bool m_stationRawSlot;
+		bool m_waitingAck;
+
+		bool m_activeProbing;
+		Ptr<DcaTxop> m_pspollDca; //!< Dedicated DcaTxop for beacons
+		virtual void DoDispose(void);
+
+		TIM m_TIM;
+		uint8_t m_DTIMCount;	//!< DTIM Count
+		uint8_t m_DTIMPeriod; //!< DTIM Period
+		uint8_t m_TrafficIndicator;
+		uint8_t m_PageSliceNum;
+		uint8_t m_PageIndex;
+
+		pageSlice m_pageSlice;
+		uint8_t m_PagePeriod;
+		uint8_t m_Pageindex_slice; // page index from page slice element, different from page index in TIM element
+		uint8_t m_Pageindex;
+		uint8_t m_PageSliceLen;
+		uint8_t m_PageSliceCount;
+		uint8_t m_BlockOffset;
+		uint8_t m_TIMOffset;
+		uint8_t m_PageBitmap[4];
+		uint8_t m_PageBitmapLen;
+		uint8_t m_TIMSeq; // 0 for DTIM ???
+
+		bool m_pagedInDtim;
+
+		uint8_t m_selfBlock;
+		uint8_t m_selfPage;
+		uint8_t m_selfSubBlock;
+		uint8_t m_selfAid;
+
+		uint8_t m_supportsPageSlicing;
+
+		Time m_maxTimeInQueue;
+		bool m_crossSlotBoundaryAllowed;
+		TracedCallback<bool> m_beaconMissed;
+
+		TracedCallback<Mac48Address> m_assocLogger;
+		TracedCallback<Mac48Address> m_deAssocLogger;
+
+		bool m_hasAnyAccessPointTwtAgreements;
+	};
+
+} // namespace ns3
 
 #endif /* STA_WIFI_MAC_H */
